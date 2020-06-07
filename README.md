@@ -190,7 +190,7 @@ variable "vsphere_network" {
 ### PXELINUX-Config-File-kickstart-installation
 
 ```bash
-# cat 01-00-0c-29-ee-ee-ee
+# cat 01-00-50-56-a6-ee-ee
 DEFAULT menu.c32
 PROMPT 0
 
@@ -209,7 +209,7 @@ append ip=dhcp initrd=kernels_initrd/centos_7.7.1908/initrd.img inst.repo=nfs:na
 ### PXELINUX-Config-File-interactive-installation
 
 ```bash
-# cat 01-00-0c-29-ee-ee-ee
+# cat 01-00-50-56-a6-ee-ee
 DEFAULT menu.c32
 PROMPT 0
 
@@ -280,6 +280,69 @@ chrony
 pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
 pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
+%end
+
+%post
+cat << EOF >> /etc/yum.repos.d/CentOS-SIG-ansible-29.repo
+# CentOS-SIG-ansible-29.repo
+#
+# Please see https://wiki.centos.org/SpecialInterestGroup/ConfigManagementSIG/Ansible
+# for more information
+
+[centos-ansible-29]
+name=CentOS Configmanagement SIG - ansible-29
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=configmanagement-ansible-29
+#baseurl=http://mirror.centos.org/$contentdir/7/configmanagement/$basearch/ansible-29/
+gpgcheck=1
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-ConfigManagement
+
+[centos-ansible-29-testing]
+name=CentOS Configmanagement SIG - ansible-29 Testing
+baseurl=http://buildlogs.centos.org/centos/7/configmanagement/$basearch/ansible-29/
+gpgcheck=0
+enabled=0
+
+[centos-ansible-29-debuginfo]
+name=CentOS Configmanagement SIG - ansible-29 Debug
+baseurl=http://debuginfo.centos.org/$contentdir/7/configmanagement/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-ConfigManagement
+
+[centos-ansible-29-source]
+name=CentOS Configmanagement SIG - ansible-29 Source
+baseurl=http://vault.centos.org/$contentdir/7/configmanagement/Source/ansible-29/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-ConfigManagement
+
+EOF
+
+cat << EOF >> /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-ConfigManagement
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+mQENBFqyzbABCADt/iuaCPSqEqhQHIW9ThAWS1MTN/2poztrsG6O+BJeyEewPvCw
+nfmkTCep3A/vZ2vb0tsX3A/xtiF9HkEKBvGGIxxHKX5/fGRGz6lIhZyNTRQW5WAC
+6HRlJe2XSKp3ANaUXaXeCs73ce7qQbLEGPmV6Yn+WnNrfL8xB6fymWG/BjTd/dMw
+1quYGynHN1z57wup78G2o+boEqRNtJ6wW3flstCq+OXYoB7kOT/nja2O5lyZBqyV
+NjCi/mmj7j9U+1xlpJEb8/OKynTKEJ2wIAa/IlLc6u5a5bAawqCBpRU3xpiu6XB0
+ysNSLqSs9Z+W2D4iWOvB/6rqdZPNAADnhCjpABEBAAG0dUNlbnRPUyBDb25maWcg
+TWFuYWdlbWVudCBTSUcgKGh0dHBzOi8vd2lraS5jZW50b3Mub3JnL1NwZWNpYWxJ
+bnRlcmVzdEdyb3VwL0NvbmZpZ01hbmFnZW1lbnRTSUcpIDxzZWN1cml0eUBjZW50
+b3Mub3JnPokBOQQTAQIAIwUCWrLNsAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4B
+AheAAAoJEBrhEPpui36K814IAM0o2BHQ8YXJhxKTas0Nx8KkcejaZMbCNx2JdOFj
+9b73LPp4LW68QFNdRib0Clw1IYKLItztSystNUINn856fVyzsiZZ0K00oab8TTYK
+eYvjfk0neJDhVfZqCVymwYtV+slJ7MnMACnpT2ijjelJtd6rgzfgd2zVOiwx0qqU
+m5NEZDosWwgGvH/9Bpy489OSNstBbahZ6FZ9Day1AHj+vriYSsnPzNcz/cLAdt+G
+2w3DzYG97bgBhffSwc8HoF96s3lU7MK0t5WweqxdaiT1jJ6jbY6Y1gEyYybrHd+A
+XMqYI79GA/VEwchmxXenXVqL6uA8TlvCDYIdzqa+MXBXlWI=
+=HUNw
+-----END PGP PUBLIC KEY BLOCK-----
+EOF
+
+yum install ansible -y
 %end
 
 ```
