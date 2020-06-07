@@ -31,7 +31,7 @@ This sets up a central master server aka meastro or gepetto which hosts terrafor
 
 | IP-address   | Subnet              | Gateway    | DNS-Server  | MAC-address       |
 | ------------ | ------------------- | ---------- | ----------- | ----------------- |
-| 10.0.249.250 | 255.255.255.0 (/24) | 10.0.249.1 | 10.0.249.53 | 00:0c:29:ee:ee:ee |
+| 10.0.249.250 | 255.255.255.0 (/24) | 10.0.249.1 | 10.0.249.53 | 00:50:56:a6:ee:ee |
 
 ### DNS
 
@@ -111,7 +111,7 @@ resource "vsphere_virtual_machine" "maestro" {
     network_id = data.vsphere_network.network.id
     adapter_type = "vmxnet3"
     use_static_mac = true
-    mac_address = "00:0c:29:ee:ee:ee"
+    mac_address = "00:50:56:a6:ee:ee"
   }
   disk {
     label = "rootvolume"
@@ -241,16 +241,16 @@ nfs --server=nas.home.local --dir=/volume1/nfs-iso/downloaded-iso/linux/CentOS-7
 firstboot --enable
 ignoredisk --only-use=sda
 # Keyboard layouts
-keyboard --vckeymap=de-nodeadkeys --xlayouts='de (nodeadkeys)'
+keyboard --vckeymap=de --xlayouts='de'
 # System language
-lang de_DE.UTF-8
+lang en_US.UTF-8
 
 # Network information
 network  --bootproto=dhcp --device=ens192 --ipv6=auto --activate
 network  --hostname=maestro.home.local
 
 # Root password
-rootpw --iscrypted $6$fT64SdqzocRzC9or$8rlvIqfSUsDzO9WwE8i0MLspyoYZVkIOyot1HyIWwFHyr6z1EIq3jNZ94UUUpa9OitspjylBMciRQEdJrSPiZ/
+rootpw --iscrypted $6$VZP5YYgWUN0wBjc/$6eERueMDPVCdzcBmpvu3pii4YZRwjeTQmpZNwr1s9PlKFAnbxWL2AKXUH.f6k0nxHhdcrFwMzjFDf3D0kvxHW0
 # System services
 services --enabled="chronyd"
 # System timezone
@@ -264,6 +264,10 @@ clearpart --none --initlabel
 %packages
 @^minimal
 @core
+@debugging
+@development
+@security-tools
+@system-admin-tools
 chrony
 
 %end
@@ -277,8 +281,7 @@ pwpolicy root --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 pwpolicy user --minlen=6 --minquality=1 --notstrict --nochanges --emptyok
 pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 %end
-eula --agreed
-reboot
+
 ```
 
 
