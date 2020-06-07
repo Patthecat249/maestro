@@ -187,7 +187,7 @@ variable "vsphere_network" {
 | Download-Link (Server 64-Bit) | http://vault.centos.org/7.7.1908/isos/x86_64/CentOS-7-x86_64-DVD-1908.iso |
 | Download-Folder               | \\nas\nfs-iso\downloaded-iso\linux                           |
 
-### PXELINUX-Config-File
+### PXELINUX-Config-File-kickstart-installation
 
 ```bash
 # cat 01-00-0c-29-ee-ee-ee
@@ -204,6 +204,25 @@ LABEL centOS
 menu label Install maestro-Server
 kernel kernels_initrd/centos_7.7.1908/vmlinuz
 append ip=dhcp initrd=kernels_initrd/centos_7.7.1908/initrd.img inst.repo=nfs:nas.home.local:/volume1/nfs-iso/downloaded-iso/linux/CentOS-7-x86_64-DVD-1908.iso inst.ks=nfs:nas.home.local:/volume1/nfs-iso/kickstart-configs/maestro.cfg
+```
+
+### PXELINUX-Config-File-interactive-installation
+
+```bash
+# cat 01-00-0c-29-ee-ee-ee
+DEFAULT menu.c32
+PROMPT 0
+
+MENU TITLE Maestro-Server-Install-Menu
+MENU AUTOBOOT Starting CentOS in # seconds
+
+timeout 18
+ONTIMEOUT centOS
+
+LABEL centOS
+menu label Install maestro-Server
+kernel kernels_initrd/centos_7.7.1908/vmlinuz
+append ip=dhcp initrd=kernels_initrd/centos_7.7.1908/initrd.img inst.repo=nfs:nas.home.local:/volume1/nfs-iso/downloaded-iso/linux/CentOS-7-x86_64-DVD-1908.iso
 ```
 
 
@@ -228,7 +247,7 @@ lang de_DE.UTF-8
 
 # Network information
 network  --bootproto=dhcp --device=ens192 --ipv6=auto --activate
-network  --hostname=sps3.home.local
+network  --hostname=maestro.home.local
 
 # Root password
 rootpw --iscrypted $6$fT64SdqzocRzC9or$8rlvIqfSUsDzO9WwE8i0MLspyoYZVkIOyot1HyIWwFHyr6z1EIq3jNZ94UUUpa9OitspjylBMciRQEdJrSPiZ/
