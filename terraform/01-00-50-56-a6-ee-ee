@@ -1,0 +1,13 @@
+DEFAULT menu.c32
+PROMPT 0
+
+MENU TITLE Maestro-Server-Install-Menu
+MENU AUTOBOOT Starting CentOS in # seconds
+
+timeout 18
+ONTIMEOUT centOS
+
+LABEL centOS
+menu label Install maestro-Server
+kernel kernels_initrd/centos_7.7.1908/vmlinuz
+append ip=dhcp initrd=kernels_initrd/centos_7.7.1908/initrd.img inst.repo=nfs:nas.home.local:/volume1/nfs-iso/downloaded-iso/linux/CentOS-7-x86_64-DVD-1908.iso
